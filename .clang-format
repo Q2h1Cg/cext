@@ -1,0 +1,28 @@
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+# 基础配置
+Language: Cpp
+BasedOnStyle: LLVM
+
+# 排版与缩进
+ColumnLimit: 80                                 # 每行最大字符数
+ContinuationIndentWidth: 4                      # 续行时的缩进宽度
+IndentWidth: 4                                  # 基本缩进宽度
+IndentGotoLabels: false                         # goto 标签不缩进
+
+# 单行语句
+AllowShortEnumsOnASingleLine: false             # 禁止单行定义枚举
+AllowShortFunctionsOnASingleLine: None          # 禁止单行定义函数
+
+# 代码块
+InsertBraces: true                              # 自动插入花括号
+KeepEmptyLinesAtTheStartOfBlocks: false         # 不保留开始处的空行
+SeparateDefinitionBlocks: Always                # 分离定义与实现块
+
+# 注释
+SpacesInLineCommentPrefix:                      # 行内注释前后插入空格
+  Minimum: 1
+  Maximum: 1
+
+# 宏
+AttributeMacros: ['defer']

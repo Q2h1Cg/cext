@@ -1,17 +1,35 @@
 #ifndef __CEXT__
 #define __CEXT__
 
-/* basic types */
+/* prelude */
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
-/* thread_local */
+/* extensions */
+#define __concat0(a, b) a##b
+#define __concat(a, b) __concat0(a, b)
+#define __uniq() __concat(__uniq, __COUNTER__)
+
+#define typeof __typeof__
+
+#define let __auto_type
+
+#define __lambda(func, args, ret_type, body)                                   \
+    ({ inline ret_type func args body func; })
+#define lambda(args, ret_type, body) __lambda(__uniq(), args, ret_type, body)
+
+#define __defer(func, var, arg)                                                \
+    auto void func(void *);                                                    \
+    int var __attribute__((cleanup(func)));                                    \
+    inline void func(__attribute__((unused)) void *arg)
+#define defer __defer(__uniq(), __uniq(), __uniq())
+
 #ifndef thread_local
 #define thread_local __thread
 #endif
 
-/* test functions */
+/* tests */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -69,21 +87,6 @@
                                                                                \
         return 0;                                                              \
     }
-
-/* extensions */
-#define __concat0(a, b) a##b
-#define __concat(a, b) __concat0(a, b)
-#define __uniq() __concat(__uniq, __COUNTER__)
-
-#define __lambda(func, args, ret_type, body)                                   \
-    ({ inline ret_type func args body func; })
-#define lambda(args, ret_type, body) __lambda(__uniq(), args, ret_type, body)
-
-#define __defer(func, var, arg)                                                \
-    auto void func(void *);                                                    \
-    int var __attribute__((cleanup(func)));                                    \
-    inline void func(__attribute__((unused)) void *arg)
-#define defer __defer(__uniq(), __uniq(), __uniq())
 
 /* utils */
 #define __min(vals, val, i, val1, val2, ...)                                   \

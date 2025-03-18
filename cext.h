@@ -37,13 +37,13 @@
 #ifdef _WIN32
 #define __FILENAME                                                             \
     ({                                                                         \
-        const char *__fname = strrchr(__FILE__, '\\');                         \
+        let __fname = strrchr(__FILE__, '\\');                                 \
         __fname ? __fname + 1 : __FILE__;                                      \
     })
 #else
 #define __FILENAME                                                             \
     ({                                                                         \
-        const char *__fname = strrchr(__FILE__, '/');                          \
+        let __fname = strrchr(__FILE__, '/');                                  \
         __fname ? __fname + 1 : __FILE__;                                      \
     })
 #endif
@@ -81,7 +81,7 @@
 #define run_tests(...)                                                         \
     int main(void) {                                                           \
         void (*tests[])(void) = __VA_ARGS__;                                   \
-        for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {        \
+        for (let i = 0UL; i < sizeof(tests) / sizeof(tests[0]); i++) {         \
             tests[i]();                                                        \
         }                                                                      \
                                                                                \
@@ -91,9 +91,9 @@
 /* utils */
 #define __min(vals, val, i, val1, val2, ...)                                   \
     ({                                                                         \
-        __typeof__(val1) vals[] = {val1, val2, ##__VA_ARGS__};                 \
-        __typeof__(val1) val = val1;                                           \
-        for (size_t i = 0; i < sizeof(vals) / sizeof(vals[0]); i++) {          \
+        typeof(val1) vals[] = {val1, val2, ##__VA_ARGS__};                     \
+        let val = val1;                                                        \
+        for (let i = 0UL; i < array_len(vals); i++) {                          \
             val = val < vals[i] ? val : vals[i];                               \
         }                                                                      \
         val;                                                                   \
@@ -103,9 +103,9 @@
 
 #define __max(vals, val, i, val1, val2, ...)                                   \
     ({                                                                         \
-        __typeof__(val1) vals[] = {val1, val2, ##__VA_ARGS__};                 \
-        __typeof__(val1) val = val1;                                           \
-        for (size_t i = 0; i < sizeof(vals) / sizeof(vals[0]); i++) {          \
+        typeof(val1) vals[] = {val1, val2, ##__VA_ARGS__};                     \
+        let val = val1;                                                        \
+        for (let i = 0UL; i < array_len(vals); i++) {                          \
             val = val > vals[i] ? val : vals[i];                               \
         }                                                                      \
         val;                                                                   \
@@ -115,9 +115,9 @@
 
 #define __swap(tmp, val1, val2)                                                \
     do {                                                                       \
-        __typeof__(val1) tmp = val1;                                           \
-        (val1) = val2;                                                         \
-        (val2) = tmp;                                                          \
+        let tmp = val1;                                                        \
+        val1 = val2;                                                           \
+        val2 = tmp;                                                            \
     } while (0)
 #define swap(val1, val2) __swap(__uniq(), (val1), (val2))
 

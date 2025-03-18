@@ -74,6 +74,43 @@
 #define __concat0(a, b) a##b
 #define __concat(a, b) __concat0(a, b)
 #define __uniq() __concat(__uniq, __COUNTER__)
+
+#define __min(vals, val, i, val1, val2, ...)                                   \
+    ({                                                                         \
+        __typeof__(val1) vals[] = {val1, val2, ##__VA_ARGS__};                 \
+        __typeof__(val1) val = val1;                                           \
+        for (size_t i = 0; i < sizeof(vals) / sizeof(vals[0]); i++) {          \
+            val = val < vals[i] ? val : vals[i];                               \
+        }                                                                      \
+        val;                                                                   \
+    })
+#define min(val1, val2, ...)                                                   \
+    __min(__uniq(), __uniq(), __uniq(), (val1), (val2), ##__VA_ARGS__)
+
+#define __max(vals, val, i, val1, val2, ...)                                   \
+    ({                                                                         \
+        __typeof__(val1) vals[] = {val1, val2, ##__VA_ARGS__};                 \
+        __typeof__(val1) val = val1;                                           \
+        for (size_t i = 0; i < sizeof(vals) / sizeof(vals[0]); i++) {          \
+            val = val > vals[i] ? val : vals[i];                               \
+        }                                                                      \
+        val;                                                                   \
+    })
+#define max(val1, val2, ...)                                                   \
+    __max(__uniq(), __uniq(), __uniq(), (val1), (val2), ##__VA_ARGS__)
+
+#define __swap(tmp, val1, val2)                                                \
+    do {                                                                       \
+        __typeof__(val1) tmp = val1;                                           \
+        (val1) = val2;                                                         \
+        (val2) = tmp;                                                          \
+    } while (0)
+#define swap(val1, val2) __swap(__uniq(), (val1), (val2))
+
+#define array_len(arr) (sizeof(arr) / sizeof(arr[0]))
+
+#define string_len(s) (__builtin_constant_p(s) ? (sizeof(s) - 1) : strlen(s))
+
 #define __defer(func, var, arg)                                                \
     auto void func(void *);                                                    \
     int var __attribute__((cleanup(func)));                                    \

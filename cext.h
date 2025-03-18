@@ -70,11 +70,22 @@
         return 0;                                                              \
     }
 
-/* utils */
+/* extensions */
 #define __concat0(a, b) a##b
 #define __concat(a, b) __concat0(a, b)
 #define __uniq() __concat(__uniq, __COUNTER__)
 
+#define __lambda(func, args, ret_type, body)                                   \
+    ({ inline ret_type func args body func; })
+#define lambda(args, ret_type, body) __lambda(__uniq(), args, ret_type, body)
+
+#define __defer(func, var, arg)                                                \
+    auto void func(void *);                                                    \
+    int var __attribute__((cleanup(func)));                                    \
+    inline void func(__attribute__((unused)) void *arg)
+#define defer __defer(__uniq(), __uniq(), __uniq())
+
+/* utils */
 #define __min(vals, val, i, val1, val2, ...)                                   \
     ({                                                                         \
         __typeof__(val1) vals[] = {val1, val2, ##__VA_ARGS__};                 \
@@ -110,11 +121,5 @@
 #define array_len(arr) (sizeof(arr) / sizeof(arr[0]))
 
 #define string_len(s) (__builtin_constant_p(s) ? (sizeof(s) - 1) : strlen(s))
-
-#define __defer(func, var, arg)                                                \
-    auto void func(void *);                                                    \
-    int var __attribute__((cleanup(func)));                                    \
-    inline void func(__attribute__((unused)) void *arg)
-#define defer __defer(__uniq(), __uniq(), __uniq())
 
 #endif

@@ -2,9 +2,11 @@
 
 - basic types
 - thread_local
-- test functions
+- extensions
+    - lambda
+    - defer
+- tests
 - utils
     - min, max
     - swap
     - array_len, string_len
-    - defer

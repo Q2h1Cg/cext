@@ -24,6 +24,40 @@ define_test(test_thread_local) {
     assert_eq(var2, 1);
 }
 
+define_test(test_lambda) {
+    int (*max2)(int, int) = lambda((int a, int b), int, {
+        if (a > b) {
+            return a;
+        } else {
+            return b;
+        }
+    });
+    assert_eq(max2(1, 2), 2);
+
+    int nums[] = {1, 4, 3, 2};
+    qsort(nums, array_len(nums), sizeof(int),
+          lambda((const void *a, const void *b), int,
+                 { return *(int *)a - *(int *)b; }));
+    int want[] = {1, 2, 3, 4};
+    assert_mem_eq(nums, want, sizeof(nums));
+}
+
+define_test(test_defer) {
+    int a;
+    int b;
+
+    a = 0;
+    b = 0;
+
+    {
+        defer { a++; }
+        defer { b = a; }
+    }
+
+    assert_eq(a, 1);
+    assert_eq(b, 0);
+}
+
 define_test(test_min) {
     assert_eq(min(2, 1), 1);
     assert_eq(min(3, 2, 1), 1);
@@ -57,28 +91,13 @@ define_test(test_string_len) {
     assert_eq(string_len(s), 3);
 }
 
-define_test(test_defer) {
-    int a;
-    int b;
-
-    a = 0;
-    b = 0;
-
-    {
-        defer { a++; }
-        defer { b = a; }
-    }
-
-    assert_eq(a, 1);
-    assert_eq(b, 0);
-}
-
 run_tests({
     test_thread_local,
+    test_lambda,
+    test_defer,
     test_min,
     test_max,
     test_swap,
     test_array_len,
     test_string_len,
-    test_defer,
 })

@@ -1,9 +1,17 @@
 #ifndef __CEXT__
 #define __CEXT__
 
+/* basic types */
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+
+/* thread_local */
+#ifndef thread_local
+#define thread_local __thread
+#endif
+
+/* test functions */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,6 +70,7 @@
         return 0;                                                              \
     }
 
+/* utils */
 #define __concat0(a, b) a##b
 #define __concat(a, b) __concat0(a, b)
 #define __uniq() __concat(__uniq, __COUNTER__)

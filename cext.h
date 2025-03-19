@@ -129,7 +129,7 @@
 #define __is_array(x) (!__builtin_types_compatible_p(typeof(x), typeof(&x[0])))
 #define __len_char_ptr(x) strlen((const char *)x)
 #define __len_char_array(x)                                                    \
-    __builtin_constant_p(x) ? (sizeof(x) - 1) : strlen((const char *)x)
+    __builtin_constant_p(x) ? (sizeof(x) - 1) : sizeof(x)
 #define __len_array(var, x)                                                    \
     ({                                                                         \
         _Pragma("GCC diagnostic push");                                        \

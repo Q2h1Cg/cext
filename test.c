@@ -30,7 +30,7 @@ define_test(test_lambda) {
     int nums[] = {1, 4, 3, 2};
     let cmp = lambda((const void *a, const void *b), int,
                      { return *(int *)a - *(int *)b; });
-    qsort(nums, array_len(nums), sizeof(int), cmp);
+    qsort(nums, len(nums), sizeof(int), cmp);
     int want[] = {1, 2, 3, 4};
     assert_mem_eq(nums, want, sizeof(nums));
 }
@@ -89,16 +89,17 @@ define_test(test_swap) {
     assert_eq(b, 1);
 }
 
-define_test(test_array_len) {
-    int arr[1];
-    assert_eq(array_len(arr), 1);
-}
+define_test(test_len) {
+    int arr[1] = {0};
+    assert_eq(len(arr), 1);
 
-define_test(test_string_len) {
-    assert_eq(string_len("123"), 3);
+    assert_eq(len("123"), 3);
 
-    let s = "123";
-    assert_eq(string_len(s), 3);
+    let s1 = "123";
+    assert_eq(len(s1), 3);
+
+    char s2[] = {1, 2, 3};
+    assert_eq(len(s2), 3);
 }
 
 run_tests({
@@ -110,6 +111,5 @@ run_tests({
     test_min,
     test_max,
     test_swap,
-    test_array_len,
-    test_string_len,
+    test_len,
 })

@@ -93,7 +93,7 @@
     ({                                                                         \
         typeof(val1) vals[] = {val1, val2, ##__VA_ARGS__};                     \
         let val = val1;                                                        \
-        for (let i = 0UL; i < array_len(vals); i++) {                          \
+        for (let i = 0UL; i < len(vals); i++) {                                \
             val = val < vals[i] ? val : vals[i];                               \
         }                                                                      \
         val;                                                                   \
@@ -105,7 +105,7 @@
     ({                                                                         \
         typeof(val1) vals[] = {val1, val2, ##__VA_ARGS__};                     \
         let val = val1;                                                        \
-        for (let i = 0UL; i < array_len(vals); i++) {                          \
+        for (let i = 0UL; i < len(vals); i++) {                                \
             val = val > vals[i] ? val : vals[i];                               \
         }                                                                      \
         val;                                                                   \
@@ -121,8 +121,30 @@
     } while (0)
 #define swap(val1, val2) __swap(__uniq(), (val1), (val2))
 
-#define array_len(arr) (sizeof(arr) / sizeof(arr[0]))
-
-#define string_len(s) (__builtin_constant_p(s) ? (sizeof(s) - 1) : strlen(s))
+#define __is_char_ptr(x)                                                       \
+    (__builtin_types_compatible_p(typeof(x), char *) ||                        \
+     __builtin_types_compatible_p(typeof(x), const char *))
+#define __is_char_array(x)                                                     \
+    (__is_array(x) && __builtin_types_compatible_p(typeof(x[0]), char))
+#define __is_array(x) (!__builtin_types_compatible_p(typeof(x), typeof(&x[0])))
+#define __len_char_ptr(x) strlen((const char *)x)
+#define __len_char_array(x)                                                    \
+    __builtin_constant_p(x) ? (sizeof(x) - 1) : strlen((const char *)x)
+#define __len_array(var, x)                                                    \
+    ({                                                                         \
+        _Pragma("GCC diagnostic push");                                        \
+        _Pragma("GCC diagnostic ignored \"-Wsizeof-pointer-div\"");            \
+        size_t var = sizeof(x) / sizeof(x[0]);                                 \
+        var;                                                                   \
+        _Pragma("GCC diagnostic pop");                                         \
+    })
+#define __len(var, x)                                                          \
+    __builtin_choose_expr(                                                     \
+        __is_char_ptr(x), __len_char_ptr(x),                                   \
+        __builtin_choose_expr(__is_char_array(x), __len_char_array(x),         \
+                              __builtin_choose_expr(__is_array(x),             \
+                                                    __len_array(var, x),       \
+                                                    __builtin_unreachable())))
+#define len(x) __len(__uniq(), (x))
 
 #endif

@@ -5,16 +5,14 @@
     - <stddef.h>
     - <stdint.h>
 - extensions
-    - typeof
-    - let
+    - typeof, let
     - lambda
     - defer
     - thread_local
 - tests
     - assert*
-    - define_test
-    - run_tests
+    - define_test, run_tests
 - utils
     - min, max
     - swap
-    - array_len, string_len
+    - len

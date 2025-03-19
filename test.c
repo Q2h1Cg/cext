@@ -4,8 +4,7 @@
 
 define_test(test_typeof) {
     int a = 1;
-    typeof(a) b = 2;
-    (void)b;
+    assert(__builtin_types_compatible_p(typeof(a), int));
 }
 
 define_test(test_let) {

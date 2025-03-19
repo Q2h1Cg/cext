@@ -11,7 +11,8 @@
     - thread_local
 - tests
     - assert*
-    - define_test, run_tests
+    - define_test
+    - run_tests
 - utils
     - min, max
     - swap

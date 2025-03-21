@@ -4,16 +4,18 @@
     - <stdbool.h>
     - <stddef.h>
     - <stdint.h>
-- extensions
+- extension
     - typeof, let
     - lambda
     - defer
     - thread_local
-- tests
-    - assert*
-    - define_test
-    - run_tests
-- utils
+- container
+    - array
+- util
     - min, max
     - swap
     - len
+- test
+    - assert*
+    - define_test
+    - run_tests

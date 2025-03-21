@@ -70,6 +70,33 @@ define_test(test_thread_local) {
     assert_eq(var2, 1);
 }
 
+define_test(test_array) {
+    array_t arr;
+    array_init(&arr, int);
+    assert_eq(len(&arr), 0);
+    assert(!arr.data);
+
+    for (let i = 0; i < 5; i++) {
+        let p = (int *)array_push(&arr);
+        *p = i;
+    }
+    assert_eq(len(&arr), 5);
+
+    for (let i = 0; i < 5; i++) {
+        let p = (int *)array_get(&arr, i);
+        assert_eq(p, arr.data + i * sizeof(int));
+        assert_eq(*p, i);
+    }
+
+    for (let i = 0; i < 5; i++) {
+        let p = (int *)array_pop(&arr);
+        assert_eq(*p, 4 - i);
+    }
+    assert_eq(len(&arr), 0);
+
+    array_cleanup(&arr);
+}
+
 define_test(test_min) {
     assert_eq(min(2, 1), 1);
     assert_eq(min(3, 2, 1), 1);
@@ -107,6 +134,7 @@ run_tests({
     test_lambda,
     test_defer,
     test_thread_local,
+    test_array,
     test_min,
     test_max,
     test_swap,
